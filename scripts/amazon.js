@@ -32,7 +32,7 @@
     priceCents: 1899 
 }];*/
 
-import {carts} from '../data/cart.js';
+import {carts, addToCart} from '../data/cart.js';
 import {products} from '../data/products.js';
 
 let productHTML = '';
@@ -94,36 +94,23 @@ products.forEach((product) => {
 
 document.querySelector('.js-products-grid').innerHTML = productHTML;
 
+function updateCartQuantity(){
+    // this is how we loop through the cart to add the quantity
+    let cartQuantity = 0;
+
+    carts.forEach((cartItem) =>{
+        cartQuantity += cartItem.quantity;
+    });
+
+    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+}
+
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
    button.addEventListener('click',() =>{
     // the dataset works with the data property in css
     const productId = button.dataset.productId;
 
-    let matchingItem;
-
-    carts.forEach((item) =>{
-        if(productId === item.productId){
-        matchingItem = item;
-        }
-    });
-
-    if(matchingItem){
-        matchingItem.quantity += 1;
-    }else{
-        carts.push({
-            productId: productId,
-            quantity: 1,
-        })   
-    }
-
-    // this is how we loop through the cart to add the quantity
-    let cartQuantity = 0;
-
-    carts.forEach((item) =>{
-        cartQuantity += item.quantity;
-    });
-
-    document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
-
+    addToCart(productId);
+    updateCartQuantity();
    })
 })
