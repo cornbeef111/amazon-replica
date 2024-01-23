@@ -1,10 +1,20 @@
-export let carts = [{
-    productId: "4f4fbcc2-4e72-45cc-935c-9e13d79cc57f",
-    quantity: 2,
-}, {
-    productId:"83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
-    quantity: 1,
-}];
+// here we use the local storage to save the cart so that it doesnt change on reload
+export let carts = JSON.parse(localStorage.getItem('cart'));
+
+if(!carts){
+    carts = [{
+        productId: "4f4fbcc2-4e72-45cc-935c-9e13d79cc57f",
+        quantity: 2,
+    }, {
+        productId:"83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
+        quantity: 1,
+    }];
+}
+
+
+function saveToStorage(){
+    localStorage.setItem('cart',JSON.stringify(carts));
+}
 
 
 export function addToCart(productId){
@@ -24,6 +34,8 @@ export function addToCart(productId){
             quantity: 1,
         })   
     }
+
+    saveToStorage();
 }
 
 
@@ -36,4 +48,6 @@ export function removeFromCart(productId){
     })
 
     carts = newCart;
+
+    saveToStorage();
 }
