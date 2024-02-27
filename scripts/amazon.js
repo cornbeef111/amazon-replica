@@ -95,15 +95,16 @@ products.forEach((product) => {
 
 document.querySelector('.js-products-grid').innerHTML = productHTML;
 
-function updateCartQuantity(){
+ function updateCartQuantity(){
     // this is how we loop through the cart to add the quantity
     let cartQuantity = 0;
 
     carts.forEach((cartItem) =>{
         cartQuantity += cartItem.quantity;
     });
-
+    
     document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+    
 }
 
 document.querySelectorAll('.js-add-to-cart').forEach((button) => {
