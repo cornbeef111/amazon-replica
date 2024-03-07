@@ -1,4 +1,4 @@
-import {carts, removeFromCart} from '../data/cart.js';
+import {carts, removeFromCart, updateDeliveryOption} from '../data/cart.js';
 import {products} from '../data/products.js';
 import { formatCurrency } from './utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
@@ -23,27 +23,21 @@ carts.forEach((cartItem) =>{
          }
      });
 
-     const deliveryOptionId =  cartItem.deliveryOptionId;
+     const deliveryOptionId = cartItem.deliveryOptionId;
 
      let deliveryOption;
-
      deliveryOptions.forEach((option) =>{
         if(option.id === deliveryOptionId){
             deliveryOption = option;
         }
      });
-        const today = dayjs();
-        const deliveryDate = today.add(
-            deliveryOption.deliveryDays,'days'
-        );
-        const dateString = deliveryDate.format(
-            'dddd, MMMM D'
-        );
+
+     
 
        cartSummaryHtml += 
        `<div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
         <div class="delivery-date">
-        Delivery date:${dateString}
+        Delivery date: Tuesday, June 21
         </div>
 
         <div class="cart-item-details-grid">
@@ -81,7 +75,7 @@ carts.forEach((cartItem) =>{
       </div> `
 })
 
-function deliveryOptionsHTML(matchingProduct, cartItem){
+function deliveryOptionsHTML(matchingProduct,cartItem){
 let html = '';
 
      deliveryOptions.forEach((deliveryOption) =>{
@@ -98,7 +92,9 @@ let html = '';
 
         const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
 
-       html += ` <div class="delivery-option">
+       html += ` <div class="delivery-option"
+             data-product-id="${matchingProduct.id}"
+             data-delivery-option=""${deliveryOption.id}>
             <input type="radio"
                 ${isChecked ? 'checked' : ''}
                 class="delivery-option-input"
@@ -127,6 +123,17 @@ document.querySelectorAll('.js-delete-link').forEach((link) =>{
        updateCheckoutQuantity(); /*this function updates the Checkout Quantity*/
     })
 })
+
+document.querySelectorAll(".js-delivery-function").forEach((element) =>{
+    element.addEventListener('click',() =>{
+    const {productId, deliveryOptionId} = element.dataset;
+       updateDeliveryOption(productId,deliveryOptionId);
+    })
+})
+
+
+
+
 
 // trying to reuse the function so i can update the checkout
 function updateCheckoutQuantity(){
